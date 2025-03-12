@@ -1,10 +1,18 @@
-import React, { useRef, useContext } from "react";
-import { NoteBookContext } from "../context/noteBook-context"; 
+import React, { useRef, useContext, useEffect } from "react";
+import { NoteBookContext } from "../context/noteBook-context";
 
-const AddNoteForm = ({ onHandleState }) => {
+const AddNoteForm = ({ onHandleState, note }) => {
   const titleRef = useRef();
   const descriptionRef = useRef();
-  const { addNotes } = useContext(NoteBookContext); 
+  const { addNotes, editNote } = useContext(NoteBookContext);
+
+  // If it's an edit operation, populate the form fields with the existing note's details
+  useEffect(() => {
+    if (note) {
+      titleRef.current.value = note.title;
+      descriptionRef.current.value = note.description;
+    }
+  }, [note]);
 
   const handleForm = (e) => {
     e.preventDefault();
@@ -13,18 +21,18 @@ const AddNoteForm = ({ onHandleState }) => {
     const description = descriptionRef.current.value;
 
     
-    addNotes(title, description);
+    if (note) {
+      editNote(note._id, title, description);  
+    } else {
+      addNotes(title, description); 
+    }
 
-    
     titleRef.current.value = "";
     descriptionRef.current.value = "";
-
-    
-    onHandleState();
+    onHandleState();  
   };
 
   const handleClose = () => {
-    
     titleRef.current.value = "";
     descriptionRef.current.value = "";
     onHandleState();
@@ -39,8 +47,10 @@ const AddNoteForm = ({ onHandleState }) => {
         <label htmlFor="description">Description</label>
         <input id="description" type="text" ref={descriptionRef} required />
 
-        <button type="submit">Add Note</button>
-        <button type="button" onClick={handleClose}>Close</button>
+        <button type="submit">{note ? "Update " : "Add Note"}</button>
+        <button type="button" onClick={handleClose}>
+          Close
+        </button>
       </form>
     </>
   );
