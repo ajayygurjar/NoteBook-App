@@ -1,5 +1,13 @@
 import React, { useRef, useContext, useEffect } from "react";
 import { NoteBookContext } from "../context/noteBook-context";
+import {
+  Form,
+  Button,
+  Container,
+  Row,
+  Col,
+  Card,
+} from "react-bootstrap";
 
 const AddNoteForm = ({ onHandleState, note }) => {
   const titleRef = useRef();
@@ -40,18 +48,50 @@ const AddNoteForm = ({ onHandleState, note }) => {
 
   return (
     <>
-      <form onSubmit={handleForm}>
-        <label htmlFor="title">Note Title</label>
-        <input id="title" type="text" ref={titleRef} required />
+       <Container className="my-4">
+      <Row className="justify-content-center">
+        <Col md={8} lg={6}>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <Card.Title className="text-center mb-4">
+                {note ? "Edit Note" : "Add New Note"}
+              </Card.Title>
+              <Form onSubmit={handleForm}>
+                <Form.Group className="mb-3" controlId="title">
+                  <Form.Label>Note Title</Form.Label>
+                  <Form.Control
+                    type="text"
+                    ref={titleRef}
+                    placeholder="Enter title"
+                    required
+                  />
+                </Form.Group>
 
-        <label htmlFor="description">Description</label>
-        <input id="description" type="text" ref={descriptionRef} required />
+                <Form.Group className="mb-3" controlId="description">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    ref={descriptionRef}
+                    placeholder="Enter description"
+                    required
+                  />
+                </Form.Group>
 
-        <button type="submit">{note ? "Update " : "Add Note"}</button>
-        <button type="button" onClick={handleClose}>
-          Close
-        </button>
-      </form>
+                <div className="d-flex justify-content-between">
+                  <Button variant="primary" type="submit">
+                    {note ? "Update" : "Add Note"}
+                  </Button>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Close
+                  </Button>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
     </>
   );
 };

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { NoteBookContext } from "../context/noteBook-context";
 import Modal from "../UI/Modal";
 import AddNoteForm from "./AddNoteForm";
+import { Row, Col, Card, Button } from "react-bootstrap";
 
 const NotesList = ({ notes }) => {
   const { deleteNote } = useContext(NoteBookContext);
@@ -19,28 +20,32 @@ const NotesList = ({ notes }) => {
   };
 
   return (
-    <div>
-      <h2>Notes</h2>
-      {notes.length > 0 ? (
-        notes.map((note) => (
-          <div key={note._id}>
-            <h3>{note.title}</h3>
-            <p>{note.description}</p>
-            <button onClick={() => deleteNote(note._id)}>Delete</button>
-            <button onClick={() => handleEdit(note)}>Edit</button>
-          </div>
-        ))
-      ) : (
-        <p>No notes found</p>
-      )}
+     <div className="my-4">
+      <h2 className="text-center mb-4">Notes</h2>
+      <Row>
+        {notes.length > 0 ? (
+          notes.map((note) => (
+            <Col md={4} sm={6} xs={12} className="mb-3" key={note._id}>
+              <Card>
+                <Card.Body>
+                  <Card.Title>{note.title}</Card.Title>
+                  <Card.Text>{note.description}</Card.Text>
+                  <div className="d-flex justify-content-between">
+                    <Button variant="outline-primary" size="sm" onClick={() => handleEdit(note)}>Edit</Button>
+                    <Button variant="outline-danger" size="sm" onClick={() => deleteNote(note._id)}>Delete</Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))
+        ) : (
+          <Col><p>No notes found.</p></Col>
+        )}
+      </Row>
 
-      
       {isEditModalOpen && selectedNote && (
         <Modal onClose={closeModal}>
-          <AddNoteForm
-            onHandleState={closeModal}
-            note={selectedNote} 
-          />
+          <AddNoteForm onHandleState={closeModal} note={selectedNote} />
         </Modal>
       )}
     </div>

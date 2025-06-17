@@ -22,7 +22,7 @@
     animation: slide-down 300ms ease-out forwards;
   }
   
-  .modal .content {
+  .content {
     padding: 1rem;
   }
   

@@ -2,11 +2,15 @@ import React, { useState, useContext } from "react";
 import { NoteBookContext } from "../context/noteBook-context";
 import Modal from "../UI/Modal"; 
 import AddNoteForm from "./AddNoteForm"; 
+import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 
 const AddNotePage = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null); 
   const { notes, addNotes, deleteNote, editNote } = useContext(NoteBookContext);
+  const [searchQuery, setSearchQuery] = useState("");
+
+
 
   const handleFormState = () => {
     setShowForm((prev) => !prev);
@@ -23,7 +27,7 @@ const AddNotePage = () => {
     setSearchQuery(e.target.value);
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
+  
   const filteredNotes = notes.filter(
     (note) =>
       note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -31,19 +35,32 @@ const AddNotePage = () => {
   );
 
   return (
-    <div>
-      <h1>NoteBook</h1>
-      <label htmlFor="search">Search:</label>
-      <input
-        id="search"
-        type="text"
-        value={searchQuery}
-        onChange={handleSearchChange}
-      />
-      <h6>Total Notes: {notes.length}</h6>
-      <h6>Showing: {filteredNotes.length} notes</h6>
+      <Container className="my-4">
+      <Row className="mb-3">
+        <Col>
+          <h1 className="text-center">Notebook</h1>
+        </Col>
+      </Row>
 
-      <button onClick={handleFormState}>Add New Note</button>
+      <Row className="mb-4 align-items-center">
+        <Col md={8}>
+          <Form.Control
+            type="text"
+            placeholder="Search notes..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </Col>
+        <Col md={4} className="text-md-end mt-2 mt-md-0">
+          <Button onClick={handleFormState}>Add New Note</Button>
+        </Col>
+      </Row>
+
+      <Row className="mb-3">
+        <Col>
+          <p>Total Notes: {notes.length} | Showing: {filteredNotes.length}</p>
+        </Col>
+      </Row>
 
       {showForm && (
         <Modal onClose={handleFormState}>
@@ -56,22 +73,27 @@ const AddNotePage = () => {
         </Modal>
       )}
 
-      <div>
-        <h2>Notes</h2>
+      <Row>
         {filteredNotes.length > 0 ? (
           filteredNotes.map((note) => (
-            <div key={note._id}>
-              <h3>{note.title}</h3>
-              <p>{note.description}</p>
-              <button onClick={() => handleEdit(note)}>Edit</button>
-              <button onClick={() => deleteNote(note._id)}>Delete</button>
-            </div>
+            <Col md={4} sm={6} xs={12} className="mb-3" key={note._id}>
+              <Card>
+                <Card.Body>
+                  <Card.Title>{note.title}</Card.Title>
+                  <Card.Text>{note.description}</Card.Text>
+                  <div className="d-flex justify-content-between">
+                    <Button variant="outline-primary" size="sm" onClick={() => handleEdit(note)}>Edit</Button>
+                    <Button variant="outline-danger" size="sm" onClick={() => deleteNote(note._id)}>Delete</Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
           ))
         ) : (
-          <p>No notes found</p>
+          <Col><p>No notes found.</p></Col>
         )}
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 };
 
