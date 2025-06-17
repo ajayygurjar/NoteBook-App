@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { NoteBookContext } from "../context/noteBook-context";
+import { NoteBookContext } from "../../context/noteBook-context";
 import Modal from "../UI/Modal";
 import AddNoteForm from "./AddNoteForm";
 import { Row, Col, Card, Button } from "react-bootstrap";
